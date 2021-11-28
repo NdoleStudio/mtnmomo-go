@@ -98,6 +98,36 @@ func (service *collectionService) GetRequestToPayStatus(
 	return status, response, err
 }
 
+// GetAccountBalance returns the balance of the account.
+//
+// API Docs: https://momodeveloper.mtn.com/docs/services/collection/operations/get-v1_0-account-balance?
+func (service *collectionService) GetAccountBalance(ctx context.Context) (*AccountBalance, *Response, error) {
+	err := service.refreshToken(ctx)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	request, err := service.client.newRequest(ctx, http.MethodGet, "/collection/v1_0/account/balance", nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	service.client.addCollectionAccessToken(request)
+	service.client.addTargetEnvironment(request)
+
+	response, err := service.client.do(request)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	balance := new(AccountBalance)
+	if err = json.Unmarshal(*response.Body, balance); err != nil {
+		return nil, response, err
+	}
+
+	return balance, response, err
+}
+
 func (service *collectionService) tokenIsValid() bool {
 	return time.Now().UTC().Unix() < service.client.collectionAccessTokenExpiresAt
 }

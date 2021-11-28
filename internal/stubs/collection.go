@@ -11,7 +11,7 @@ func CollectionToken() []byte {
 `)
 }
 
-// CollectionRequestToPayStatus is a dummy json response for the `/requesttopay/{referenceId}` endpoint
+// CollectionRequestToPayStatus is a dummy json response for the `/collection/v1_0/requesttopay/{referenceId}` endpoint
 func CollectionRequestToPayStatus() []byte {
 	return []byte(`
 		{
@@ -24,6 +24,16 @@ func CollectionRequestToPayStatus() []byte {
 				"partyId": "4656473839"
 			},
 			"status": "SUCCESSFUL"
+		}
+`)
+}
+
+// CollectionAccountBalance is a dummy json response for the `/collection/v1_0/account/balance` endpoint
+func CollectionAccountBalance() []byte {
+	return []byte(`
+		{
+			"availableBalance": "1000",
+			"currency": "EUR"
 		}
 `)
 }

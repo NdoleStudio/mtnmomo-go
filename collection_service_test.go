@@ -139,3 +139,37 @@ func TestCollectionService_GetRequestToPayStatus(t *testing.T) {
 	// Teardown
 	server.Close()
 }
+
+func TestCollectionService_GetAccountBalance(t *testing.T) {
+	// Setup
+	t.Parallel()
+
+	// Arrange
+	requests := make([]*http.Request, 0)
+	responses := [][]byte{stubs.CollectionToken(), stubs.CollectionAccountBalance()}
+	server := helpers.MakeRequestCapturingTestServer(http.StatusOK, responses, &requests)
+	client := New(
+		WithBaseURL(server.URL),
+		WithSubscriptionKey(testSubscriptionKey),
+		WithAPIUser(testAPIUser),
+		WithAPIKey(testAPIKey),
+	)
+
+	// Act
+	status, response, err := client.Collection.GetAccountBalance(context.Background())
+
+	// Assert
+	assert.Nil(t, err)
+
+	assert.GreaterOrEqual(t, len(requests), 1)
+	request := requests[len(requests)-1]
+	assert.Equal(t, "/collection/v1_0/account/balance", request.URL.Path)
+	assert.True(t, strings.HasPrefix(request.Header.Get("Authorization"), "Bearer"))
+	assert.Equal(t, testSubscriptionKey, request.Header.Get(headerKeySubscriptionKey))
+	assert.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+
+	assert.Equal(t, &AccountBalance{AvailableBalance: "1000", Currency: "EUR"}, status)
+
+	// Teardown
+	server.Close()
+}

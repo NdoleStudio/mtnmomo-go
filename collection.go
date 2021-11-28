@@ -27,8 +27,14 @@ type RequestToPayPayer struct {
 	PartyID     string `json:"partyId"`
 }
 
-// RequestToPayReason used to retrieve a cause in case of failure.
+// RequestToPayReason contains the cause in case of failure.
 type RequestToPayReason struct {
 	Code    string `json:"code"`
 	Message string `json:"message"`
+}
+
+// AccountBalance is available balance of the account
+type AccountBalance struct {
+	AvailableBalance string `json:"availableBalance"`
+	Currency         string `json:"currency"`
 }
