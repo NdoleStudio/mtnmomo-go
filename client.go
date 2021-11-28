@@ -89,10 +89,6 @@ func (client *Client) addURLParams(request *http.Request, params map[string]stri
 
 // do carries out an HTTP request and returns a Response
 func (client *Client) do(req *http.Request) (*Response, error) {
-	if req == nil {
-		return nil, fmt.Errorf("%T cannot be nil", req)
-	}
-
 	httpResponse, err := client.httpClient.Do(req)
 	if err != nil {
 		return nil, err
