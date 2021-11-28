@@ -21,12 +21,17 @@ type service struct {
 // Client is the campay API client.
 // Do not instantiate this client with Client{}. Use the New method instead.
 type Client struct {
-	httpClient      *http.Client
-	common          service
-	baseURL         string
-	subscriptionKey string
+	httpClient               *http.Client
+	common                   service
+	baseURL                  string
+	subscriptionKey          string
+	collectionToken          string
+	collectionTokenExpiresAt int64
+	apiUser                  string
+	apiKey                   string
 
-	APIUser *apiUserService
+	APIUser    *apiUserService
+	Collection *collectionService
 }
 
 // New creates and returns a new campay.Client from a slice of campay.ClientOption.
@@ -41,10 +46,13 @@ func New(options ...Option) *Client {
 		httpClient:      config.httpClient,
 		subscriptionKey: config.subscriptionKey,
 		baseURL:         config.baseURL,
+		apiKey:          config.apiKey,
+		apiUser:         config.apiUser,
 	}
 
 	client.common.client = client
 	client.APIUser = (*apiUserService)(&client.common)
+	client.Collection = (*collectionService)(&client.common)
 	return client
 }
 
@@ -86,6 +94,10 @@ func (client *Client) addURLParams(request *http.Request, params map[string]stri
 	return request
 }
 */
+func (client *Client) addBasicAuth(request *http.Request) *http.Request {
+	request.SetBasicAuth(client.apiUser, client.apiKey)
+	return request
+}
 
 // do carries out an HTTP request and returns a Response
 func (client *Client) do(req *http.Request) (*Response, error) {

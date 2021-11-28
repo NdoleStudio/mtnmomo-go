@@ -7,6 +7,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const (
+	testSubscriptionKey = "subscriptionKey"
+	testAPIKey          = "apiKey"
+	testAPIUser         = "apiUser"
+)
+
 func TestWithHTTPClient(t *testing.T) {
 	t.Run("httpClient is not set when the httpClient is nil", func(t *testing.T) {
 		// Setup
@@ -78,12 +84,43 @@ func TestWithSubscriptionKey(t *testing.T) {
 
 		// Arrange
 		config := defaultClientConfig()
-		subscriptionKey := "key"
 
 		// Act
-		WithSubscriptionKey(subscriptionKey).apply(config)
+		WithSubscriptionKey(testSubscriptionKey).apply(config)
 
 		// Assert
-		assert.Equal(t, subscriptionKey, config.subscriptionKey)
+		assert.Equal(t, testSubscriptionKey, config.subscriptionKey)
+	})
+}
+
+func TestWithAPIKey(t *testing.T) {
+	t.Run("apiKey is set successfully", func(t *testing.T) {
+		// Setup
+		t.Parallel()
+
+		// Arrange
+		config := defaultClientConfig()
+
+		// Act
+		WithSubscriptionKey(testAPIKey).apply(config)
+
+		// Assert
+		assert.Equal(t, testAPIKey, config.apiKey)
+	})
+}
+
+func TestWithAPIUser(t *testing.T) {
+	t.Run("apiUser is set successfully", func(t *testing.T) {
+		// Setup
+		t.Parallel()
+
+		// Arrange
+		config := defaultClientConfig()
+
+		// Act
+		WithSubscriptionKey(testAPIUser).apply(config)
+
+		// Assert
+		assert.Equal(t, testAPIUser, config.apiUser)
 	})
 }

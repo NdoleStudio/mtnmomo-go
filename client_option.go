@@ -36,9 +36,22 @@ func WithBaseURL(baseURL string) Option {
 }
 
 // WithSubscriptionKey sets the delay in milliseconds before a response is gotten.
-// The delay must be > 0 for it to be used.
 func WithSubscriptionKey(subscriptionKey string) Option {
 	return clientOptionFunc(func(config *clientConfig) {
 		config.subscriptionKey = subscriptionKey
+	})
+}
+
+// WithAPIUser sets the delay in milliseconds before a response is gotten.
+func WithAPIUser(apiUser string) Option {
+	return clientOptionFunc(func(config *clientConfig) {
+		config.apiUser = apiUser
+	})
+}
+
+// WithAPIKey sets the delay in milliseconds before a response is gotten.
+func WithAPIKey(apiKey string) Option {
+	return clientOptionFunc(func(config *clientConfig) {
+		config.apiKey = apiKey
 	})
 }

@@ -6,6 +6,8 @@ type clientConfig struct {
 	httpClient      *http.Client
 	baseURL         string
 	subscriptionKey string
+	apiUser         string
+	apiKey          string
 }
 
 func defaultClientConfig() *clientConfig {

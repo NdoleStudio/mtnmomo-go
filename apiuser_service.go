@@ -67,7 +67,7 @@ func (service *apiUserService) Get(ctx context.Context, userID string) (*APIUser
 	}
 
 	apiUser := new(APIUser)
-	if err = json.Unmarshal(*response.Body, &apiUser); err != nil {
+	if err = json.Unmarshal(*response.Body, apiUser); err != nil {
 		return nil, response, err
 	}
 

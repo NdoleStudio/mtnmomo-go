@@ -21,8 +21,7 @@ func TestApiUserService_Create(t *testing.T) {
 	// Arrange
 	request := http.Request{}
 	server := helpers.MakeRequestCapturingTestServer(http.StatusCreated, nil, &request)
-	key := "subscriptionKey"
-	client := New(WithBaseURL(server.URL), WithSubscriptionKey(key))
+	client := New(WithBaseURL(server.URL), WithSubscriptionKey(testSubscriptionKey))
 	userID := uuid.NewString()
 
 	// Act
@@ -31,7 +30,7 @@ func TestApiUserService_Create(t *testing.T) {
 	// Assert
 	assert.Nil(t, err)
 
-	assert.Equal(t, key, request.Header.Get(subscriptionKeyHeaderKey))
+	assert.Equal(t, testSubscriptionKey, request.Header.Get(subscriptionKeyHeaderKey))
 	assert.Equal(t, userID, request.Header.Get("X-Reference-Id"))
 	assert.Equal(t, http.StatusCreated, response.HTTPResponse.StatusCode)
 	assert.Equal(t, userID, apiUser)
@@ -67,8 +66,7 @@ func TestApiUserService_CreateAPIKey(t *testing.T) {
 	// Arrange
 	request := http.Request{}
 	server := helpers.MakeRequestCapturingTestServer(http.StatusCreated, stubs.APIUserCreateAPIKey(), &request)
-	key := "subscriptionKey"
-	client := New(WithBaseURL(server.URL), WithSubscriptionKey(key))
+	client := New(WithBaseURL(server.URL), WithSubscriptionKey(testSubscriptionKey))
 	userID := uuid.NewString()
 
 	// Act
@@ -78,7 +76,7 @@ func TestApiUserService_CreateAPIKey(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.True(t, strings.Contains(request.URL.String(), userID))
-	assert.Equal(t, key, request.Header.Get(subscriptionKeyHeaderKey))
+	assert.Equal(t, testSubscriptionKey, request.Header.Get(subscriptionKeyHeaderKey))
 	assert.Equal(t, "f1db798c98df4bcf83b538175893bbf0", apiKey)
 	assert.Equal(t, http.StatusCreated, response.HTTPResponse.StatusCode)
 
@@ -93,8 +91,7 @@ func TestApiUserService_Get(t *testing.T) {
 	// Arrange
 	request := http.Request{}
 	server := helpers.MakeRequestCapturingTestServer(http.StatusCreated, stubs.APIUserGet(), &request)
-	key := "subscriptionKey"
-	client := New(WithBaseURL(server.URL), WithSubscriptionKey(key))
+	client := New(WithBaseURL(server.URL), WithSubscriptionKey(testSubscriptionKey))
 	userID := uuid.NewString()
 
 	// Act
@@ -104,7 +101,7 @@ func TestApiUserService_Get(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.True(t, strings.Contains(request.URL.String(), userID))
-	assert.Equal(t, key, request.Header.Get(subscriptionKeyHeaderKey))
+	assert.Equal(t, testSubscriptionKey, request.Header.Get(subscriptionKeyHeaderKey))
 	assert.Equal(t, http.StatusCreated, response.HTTPResponse.StatusCode)
 	assert.Equal(t, userID, apiUser.UserID)
 	assert.Equal(t, "sandbox", apiUser.TargetEnvironment)
