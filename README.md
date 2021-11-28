@@ -34,6 +34,9 @@ import "github.com/NdoleStudio/mtnmomo-go"
   - `GET {baseURL}/apiuser/{APIUser}`: Get API user information
 - [Collection](#collection)
   - `POST {baseURL}/collection/token/`: Create access token
+  - `POST {baseURL}/collection/v1_0/requesttopay`: Request a payment from a consumer
+  - `GET {baseURL}/collection/v1_0/requesttopay/{referenceId}`: Get the status of a request to pay
+  - `GET {baseURL}/collection/v1_0/account/balance`: Get the balance of the account
 
 ## Usage
 
@@ -128,6 +131,59 @@ if err != nil {
 }
 
 log.Println(authToken.AccessToken) // e.g eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9....
+```
+
+#### `POST {baseURL}/collection/v1_0/requesttopay`: Request a payment from a consumer
+
+This operation is used to request a payment from a consumer (Payer). The payer will be asked to authorize the payment. The transaction will be executed once the payer has authorized the payment.
+
+```go
+callbackURL := "http://callback-url.com"
+response, err := client.Collection.RequestToPay(
+	context.Background(),
+	referenceID,
+	&mtnmomo.RequestToPayParams{
+		Amount:     "10",
+		Currency:   "EUR",
+		ExternalID: uuid.NewString(),
+		Payer: &mtnmomo.RequestToPayPayer{
+			PartyIDType: "MSISDN",
+			PartyID:     "673978334",
+		},
+		PayerMessage: "Test Payer Message",
+		PayeeNote:    "Test Payee Note",
+	},
+	&callbackURL,
+)
+
+if err != nil {
+    log.Fatal(err)
+}
+
+log.Println(response.HTTPResponse.StatusCode) // e.g 201 (Accepted)
+```
+
+#### `GET {baseURL}/collection/v1_0/requesttopay/{referenceId}`: Get the status of a request to pay
+
+This operation is used to get the status of a request to pay. X-Reference-Id that was passed in the post is used as reference to the request.
+
+```go
+status, _, err := client.Collection.GetRequestToPayStatus(context.Background(), referenceID)
+if err != nil {
+	log.Fatal(err)
+}
+
+log.Println(status.Status) // SUCCESSFUL
+```
+
+#### `GET {baseURL}/collection/v1_0/account/balance`: Get the balance of the account
+
+```go
+balance, _, err := client.Collection.GetAccountBalance(context.Background())
+if err != nil {
+    log.Fatal(err)
+}
+log.Println(balance.AvailableBalance) // "1000"
 ```
 
 ## Testing
