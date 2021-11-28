@@ -48,7 +48,7 @@ func (service *collectionService) RequestToPay(
 		return nil, err
 	}
 
-	request, err := service.client.newRequest(ctx, http.MethodPost, "/collection/requesttopay", params)
+	request, err := service.client.newRequest(ctx, http.MethodPost, "/collection/v1_0/requesttopay", params)
 	if err != nil {
 		return nil, err
 	}
@@ -59,13 +59,14 @@ func (service *collectionService) RequestToPay(
 
 	service.client.addTargetEnvironment(request)
 	service.client.addReferenceID(request, referenceID)
+	service.client.addCollectionAccessToken(request)
 
 	response, err := service.client.do(request)
 	return response, err
 }
 
 func (service *collectionService) tokenIsValid() bool {
-	return time.Now().UTC().Unix() < service.client.collectionTokenExpiresAt
+	return time.Now().UTC().Unix() < service.client.collectionAccessTokenExpiresAt
 }
 
 func (service *collectionService) refreshToken(ctx context.Context) error {
@@ -81,8 +82,8 @@ func (service *collectionService) refreshToken(ctx context.Context) error {
 		return err
 	}
 
-	service.client.collectionToken = token.AccessToken
-	service.client.collectionTokenExpiresAt = time.Now().UTC().Unix() + token.ExpiresIn - 100
+	service.client.collectionAccessToken = token.AccessToken
+	service.client.collectionAccessTokenExpiresAt = time.Now().UTC().Unix() + token.ExpiresIn - 100
 
 	return nil
 }

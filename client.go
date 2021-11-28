@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -33,9 +32,9 @@ type Client struct {
 	apiKey            string
 	targetEnvironment string
 
-	collectionLock           sync.Mutex
-	collectionToken          string
-	collectionTokenExpiresAt int64
+	collectionLock                 sync.Mutex
+	collectionAccessToken          string
+	collectionAccessTokenExpiresAt int64
 
 	APIUser    *apiUserService
 	Collection *collectionService
@@ -103,6 +102,11 @@ func (client *Client) addURLParams(request *http.Request, params map[string]stri
 	return request
 }
 */
+
+func (client *Client) addCollectionAccessToken(request *http.Request) {
+	request.Header.Add("Authorization", "Bearer "+client.collectionAccessToken)
+}
+
 func (client *Client) addBasicAuth(request *http.Request) {
 	request.SetBasicAuth(client.apiUser, client.apiKey)
 }
@@ -112,7 +116,7 @@ func (client *Client) addReferenceID(request *http.Request, reference string) {
 }
 
 func (client *Client) addCallbackURL(request *http.Request, url string) {
-	request.Header.Set(headerKeyTargetEnvironment, url)
+	request.Header.Set(headerKeyCallbackURL, url)
 }
 
 func (client *Client) addTargetEnvironment(request *http.Request) {
@@ -143,18 +147,14 @@ func (client *Client) do(req *http.Request) (*Response, error) {
 
 // newResponse converts an *http.Response to *Response
 func (client *Client) newResponse(httpResponse *http.Response) (*Response, error) {
-	if httpResponse == nil {
-		return nil, fmt.Errorf("%T cannot be nil", httpResponse)
-	}
+	response := new(Response)
+	response.HTTPResponse = httpResponse
 
-	resp := new(Response)
-	resp.HTTPResponse = httpResponse
-
-	buf, err := ioutil.ReadAll(resp.HTTPResponse.Body)
+	buf, err := ioutil.ReadAll(response.HTTPResponse.Body)
 	if err != nil {
 		return nil, err
 	}
-	resp.Body = &buf
+	response.Body = &buf
 
-	return resp, resp.Error()
+	return response, response.Error()
 }

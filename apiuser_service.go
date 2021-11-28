@@ -32,7 +32,7 @@ func (service *apiUserService) CreateAPIUser(ctx context.Context, userID string,
 //
 // API Docs: https://momodeveloper.mtn.com/docs/services/sandbox-provisioning-api/operations/post-v1_0-apiuser-apikey
 func (service *apiUserService) CreateAPIKey(ctx context.Context, userID string) (string, *Response, error) {
-	request, err := service.client.newRequest(ctx, http.MethodPost, "/v1_0/apiuser/"+userID+"/apikey ", nil)
+	request, err := service.client.newRequest(ctx, http.MethodPost, "/v1_0/apiuser/"+userID+"/apikey", nil)
 	if err != nil {
 		return "", nil, err
 	}

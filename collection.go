@@ -12,6 +12,6 @@ type RequestToPayParams struct {
 
 // RequestToPayParamsPayer identifies an account holder in the wallet platform.
 type RequestToPayParamsPayer struct {
-	PartyIDType string `json:"partyIdTyp"`
+	PartyIDType string `json:"partyIdType"`
 	PartyID     string `json:"partyId"`
 }
