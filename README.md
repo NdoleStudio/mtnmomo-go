@@ -122,6 +122,17 @@ You can run the unit tests for this client from the root directory using the com
 go test -v
 ```
 
+### Security
+
+If you discover any security related issues, please email arnoldewin@gmail.com instead of using the GitHub issues.
+
+## Credits
+
+- [Acho Arnold](https://github.com/achoarnold)
+- [All Contributors](./contributors)
+- [Http Client Template](https://github.com/NdoleStudio/go-http-client)
+
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
