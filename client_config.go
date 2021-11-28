@@ -11,6 +11,6 @@ type clientConfig struct {
 func defaultClientConfig() *clientConfig {
 	return &clientConfig{
 		httpClient: http.DefaultClient,
-		baseURL:    "https://sandbox.momodeveloper.mtn.com/v1_0",
+		baseURL:    "https://sandbox.momodeveloper.mtn.com/",
 	}
 }

@@ -85,3 +85,31 @@ func TestApiUserService_CreateAPIKey(t *testing.T) {
 	// Teardown
 	server.Close()
 }
+
+func TestApiUserService_Get(t *testing.T) {
+	// Setup
+	t.Parallel()
+
+	// Arrange
+	request := http.Request{}
+	server := helpers.MakeRequestCapturingTestServer(http.StatusCreated, stubs.APIUserGet(), &request)
+	key := "subscriptionKey"
+	client := New(WithBaseURL(server.URL), WithSubscriptionKey(key))
+	userID := uuid.NewString()
+
+	// Act
+	apiUser, response, err := client.APIUser.Get(context.Background(), userID)
+
+	// Assert
+	assert.Nil(t, err)
+
+	assert.True(t, strings.Contains(request.URL.String(), userID))
+	assert.Equal(t, key, request.Header.Get(subscriptionKeyHeaderKey))
+	assert.Equal(t, http.StatusCreated, response.HTTPResponse.StatusCode)
+	assert.Equal(t, userID, apiUser.UserID)
+	assert.Equal(t, "sandbox", apiUser.TargetEnvironment)
+	assert.Equal(t, "string", apiUser.ProviderCallbackHost)
+
+	// Teardown
+	server.Close()
+}

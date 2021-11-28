@@ -30,6 +30,8 @@ import "github.com/NdoleStudio/mtnmomo-go"
 
 - [API User](#api-user)
     - `POST {baseURL}/apiuser`: Create API User
+    - `POST {baseURL}/apiuser/{APIUser}/apikey`: Create API Key
+    - `GET {baseURL}/apiuser/{APIUser}`: Get API user information
 
 ## Usage
 
@@ -46,6 +48,7 @@ import (
 
 func main()  {
 	client := mtnmomo.New(
+      mtnmomo.WithBaseURL("https://sandbox.momodeveloper.mtn.com/v1_0" /* It can also be a production url */),
       mtnmomo.WithSubscriptionKey(""/* Subscription key */),
     )
 }
@@ -66,8 +69,10 @@ if err != nil {
 
 #### `POST {baseURL}/apiuser`: Create API User
 
+Used to create an API user in the sandbox target environment.
+
 ```go
-apiUser, response, err := client.APIUser.CreateAPIUser(context.Background(), "userID", "providerCallbackHost")
+userID, response, err := client.APIUser.CreateAPIUser(context.Background(), uuid.NewString(), "providerCallbackHost")
 
 if err != nil {
     log.Fatal(err)
@@ -75,6 +80,35 @@ if err != nil {
 
 log.Println(response.HTTPResponse.StatusCode) // 201
 ```
+
+#### `POST {baseURL}/apiuser/{APIUser}/apikey`: Create API Key
+
+Used to create an API key for an API user in the sandbox target environment.
+
+```go
+apiKey, response, err := client.APIUser.CreateAPIKey(context.Background(), "userID")
+
+if err != nil {
+    log.Fatal(err)
+}
+
+log.Println(apiKey) // e.g "f1db798c98df4bcf83b538175893bbf0"
+```
+
+#### `GET {baseURL}/apiuser/{APIUser}`: Get API user information
+
+Used to get API user information.
+
+```go
+apiUser, response, err := client.APIUser.CreateAPIKey(context.Background(), "userID")
+
+if err != nil {
+    log.Fatal(err)
+}
+
+log.Println(apiUser.TargetEnvironment) // e.g "sandbox"
+```
+
 
 ## Testing
 
