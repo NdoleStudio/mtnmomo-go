@@ -129,8 +129,8 @@ If you discover any security related issues, please email arnoldewin@gmail.com i
 ## Credits
 
 - [Acho Arnold](https://github.com/achoarnold)
-- [All Contributors](./contributors)
-- [Http Client Template](https://github.com/NdoleStudio/go-http-client)
+- [All Contributors](../../contributors)
+- [Go HTTP Client Template](https://github.com/NdoleStudio/go-http-client)
 
 
 ## License
