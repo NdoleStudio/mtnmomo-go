@@ -29,9 +29,11 @@ import "github.com/NdoleStudio/mtnmomo-go"
 ## Implemented
 
 - [API User](#api-user)
-    - `POST {baseURL}/apiuser`: Create API User
-    - `POST {baseURL}/apiuser/{APIUser}/apikey`: Create API Key
-    - `GET {baseURL}/apiuser/{APIUser}`: Get API user information
+  - `POST {baseURL}/apiuser`: Create API User
+  - `POST {baseURL}/apiuser/{APIUser}/apikey`: Create API Key
+  - `GET {baseURL}/apiuser/{APIUser}`: Get API user information
+- [Collection](#collection)
+  - `POST {baseURL}/collection/token/`: Create access token
 
 ## Usage
 
@@ -113,6 +115,20 @@ if err != nil {
 log.Println(apiUser.TargetEnvironment) // e.g "sandbox"
 ```
 
+### Collection
+
+#### `POST {baseURL}/collection/token/`: Create access token
+
+This operation is used to create an access token which can then be used to authorize and authenticate towards the other end-points of the API.
+
+```go
+authToken, response, err := client.Collection.Token(context.Background())
+if err != nil {
+	log.Fatal(err)
+}
+
+log.Println(authToken.AccessToken) // e.g eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9....
+```
 
 ## Testing
 
