@@ -91,18 +91,6 @@ func (client *Client) newRequest(ctx context.Context, method, uri string, body i
 	return req, nil
 }
 
-/*
-// addURLParams adds urls parameters to an *http.Request
-func (client *Client) addURLParams(request *http.Request, params map[string]string) *http.Request {
-	q := request.URL.Query()
-	for key, value := range params {
-		q.Add(key, value)
-	}
-	request.URL.RawQuery = q.Encode()
-	return request
-}
-*/
-
 func (client *Client) addCollectionAccessToken(request *http.Request) {
 	request.Header.Add("Authorization", "Bearer "+client.collectionAccessToken)
 }
