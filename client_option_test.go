@@ -8,9 +8,10 @@ import (
 )
 
 const (
-	testSubscriptionKey = "subscriptionKey"
-	testAPIKey          = "apiKey"
-	testAPIUser         = "apiUser"
+	testSubscriptionKey   = "subscriptionKey"
+	testAPIKey            = "apiKey"
+	testTargetEnvironment = "targetEnvironment"
+	testAPIUser           = "apiUser"
 )
 
 func TestWithHTTPClient(t *testing.T) {
@@ -102,7 +103,7 @@ func TestWithAPIKey(t *testing.T) {
 		config := defaultClientConfig()
 
 		// Act
-		WithSubscriptionKey(testAPIKey).apply(config)
+		WithAPIKey(testAPIKey).apply(config)
 
 		// Assert
 		assert.Equal(t, testAPIKey, config.apiKey)
@@ -118,9 +119,25 @@ func TestWithAPIUser(t *testing.T) {
 		config := defaultClientConfig()
 
 		// Act
-		WithSubscriptionKey(testAPIUser).apply(config)
+		WithAPIUser(testAPIUser).apply(config)
 
 		// Assert
 		assert.Equal(t, testAPIUser, config.apiUser)
+	})
+}
+
+func TestWithTargetEnvironment(t *testing.T) {
+	t.Run("targetEnvironment is set successfully", func(t *testing.T) {
+		// Setup
+		t.Parallel()
+
+		// Arrange
+		config := defaultClientConfig()
+
+		// Act
+		WithTargetEnvironment(testTargetEnvironment).apply(config)
+
+		// Assert
+		assert.Equal(t, testTargetEnvironment, config.targetEnvironment)
 	})
 }

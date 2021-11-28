@@ -21,7 +21,8 @@ func (service *apiUserService) CreateAPIUser(ctx context.Context, userID string,
 	if err != nil {
 		return userID, nil, err
 	}
-	request.Header.Set("X-Reference-Id", userID)
+
+	service.client.addReferenceID(request, userID)
 
 	response, err := service.client.do(request)
 	return userID, response, err

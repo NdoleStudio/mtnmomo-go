@@ -49,6 +49,13 @@ func WithAPIUser(apiUser string) Option {
 	})
 }
 
+// WithTargetEnvironment sets the identifier of the EWP system where the transaction shall be processed.
+func WithTargetEnvironment(targetEnvironment string) Option {
+	return clientOptionFunc(func(config *clientConfig) {
+		config.targetEnvironment = targetEnvironment
+	})
+}
+
 // WithAPIKey sets the delay in milliseconds before a response is gotten.
 func WithAPIKey(apiKey string) Option {
 	return clientOptionFunc(func(config *clientConfig) {
