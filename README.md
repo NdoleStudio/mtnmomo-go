@@ -47,9 +47,9 @@ import (
 )
 
 func main()  {
-	client := mtnmomo.New(
-      mtnmomo.WithBaseURL("https://sandbox.momodeveloper.mtn.com/v1_0"),
-      mtnmomo.WithSubscriptionKey(""/* Subscription key */),
+    client := mtnmomo.New(
+        mtnmomo.WithBaseURL("https://sandbox.momodeveloper.mtn.com/v1_0"),
+        mtnmomo.WithSubscriptionKey(""/* Subscription key */),
     )
 }
 ```
