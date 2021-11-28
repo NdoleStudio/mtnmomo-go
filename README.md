@@ -56,7 +56,7 @@ func main()  {
 All API calls return an `error` as the last return object. All successful calls will return a `nil` error.
 
 ```go
-status, response, err := statusClient.Status.Ok(context.Background())
+apiUser, response, err := statusClient.APIUser.CreateAPIUser(context.Background())
 if err != nil {
     //handle error
 }
@@ -67,7 +67,7 @@ if err != nil {
 #### `POST {baseURL}/apiuser`: Create API User
 
 ```go
-response, err := client.APIUser.Create(context.Background())
+apiUser, response, err := client.APIUser.CreateAPIUser(context.Background(), "userID", "providerCallbackHost")
 
 if err != nil {
     log.Fatal(err)
