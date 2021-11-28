@@ -43,7 +43,7 @@ An instance of the client can be created using `New()`.
 package main
 
 import (
-	"github.com/NdoleStudio/mtnmomo-go"
+    "github.com/NdoleStudio/mtnmomo-go"
 )
 
 func main()  {
