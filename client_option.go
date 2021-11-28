@@ -1,4 +1,4 @@
-package client
+package mtnmomo
 
 import (
 	"net/http"
@@ -35,12 +35,10 @@ func WithBaseURL(baseURL string) Option {
 	})
 }
 
-// WithDelay sets the delay in milliseconds before a response is gotten.
+// WithSubscriptionKey sets the delay in milliseconds before a response is gotten.
 // The delay must be > 0 for it to be used.
-func WithDelay(delay int) Option {
+func WithSubscriptionKey(subscriptionKey string) Option {
 	return clientOptionFunc(func(config *clientConfig) {
-		if delay > 0 {
-			config.delay = delay
-		}
+		config.subscriptionKey = subscriptionKey
 	})
 }

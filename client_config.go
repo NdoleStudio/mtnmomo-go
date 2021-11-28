@@ -1,17 +1,16 @@
-package client
+package mtnmomo
 
 import "net/http"
 
 type clientConfig struct {
-	httpClient *http.Client
-	delay      int
-	baseURL    string
+	httpClient      *http.Client
+	baseURL         string
+	subscriptionKey string
 }
 
 func defaultClientConfig() *clientConfig {
 	return &clientConfig{
 		httpClient: http.DefaultClient,
-		delay:      0,
-		baseURL:    "https://httpstat.us",
+		baseURL:    "https://sandbox.momodeveloper.mtn.com/v1_0",
 	}
 }

@@ -1,4 +1,4 @@
-package client
+package mtnmomo
 
 import (
 	"bytes"
@@ -8,7 +8,10 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
-	"strconv"
+)
+
+const (
+	subscriptionKeyHeaderKey = "Ocp-Apim-Subscription-Key"
 )
 
 type service struct {
@@ -18,12 +21,12 @@ type service struct {
 // Client is the campay API client.
 // Do not instantiate this client with Client{}. Use the New method instead.
 type Client struct {
-	httpClient *http.Client
-	common     service
-	baseURL    string
-	delay      int
+	httpClient      *http.Client
+	common          service
+	baseURL         string
+	subscriptionKey string
 
-	Status *statusService
+	APIUser *apiUserService
 }
 
 // New creates and returns a new campay.Client from a slice of campay.ClientOption.
@@ -35,13 +38,13 @@ func New(options ...Option) *Client {
 	}
 
 	client := &Client{
-		httpClient: config.httpClient,
-		delay:      config.delay,
-		baseURL:    config.baseURL,
+		httpClient:      config.httpClient,
+		subscriptionKey: config.subscriptionKey,
+		baseURL:         config.baseURL,
 	}
 
 	client.common.client = client
-	client.Status = (*statusService)(&client.common)
+	client.APIUser = (*apiUserService)(&client.common)
 	return client
 }
 
@@ -67,10 +70,7 @@ func (client *Client) newRequest(ctx context.Context, method, uri string, body i
 
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
-
-	if client.delay > 0 {
-		client.addURLParams(req, map[string]string{"sleep": strconv.Itoa(client.delay)})
-	}
+	req.Header.Set(subscriptionKeyHeaderKey, client.subscriptionKey)
 
 	return req, nil
 }

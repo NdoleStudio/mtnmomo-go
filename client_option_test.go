@@ -1,4 +1,4 @@
-package client
+package mtnmomo
 
 import (
 	"net/http"
@@ -71,34 +71,19 @@ func TestWithBaseURL(t *testing.T) {
 	})
 }
 
-func TestWithDelay(t *testing.T) {
-	t.Run("delay is set successfully", func(t *testing.T) {
+func TestWithSubscriptionKey(t *testing.T) {
+	t.Run("subscriptionKey is set successfully", func(t *testing.T) {
 		// Setup
 		t.Parallel()
 
 		// Arrange
 		config := defaultClientConfig()
-		delay := 1
+		subscriptionKey := "key"
 
 		// Act
-		WithDelay(delay).apply(config)
+		WithSubscriptionKey(subscriptionKey).apply(config)
 
 		// Assert
-		assert.Equal(t, delay, config.delay)
-	})
-
-	t.Run("delay is not set when value < 0", func(t *testing.T) {
-		// Setup
-		t.Parallel()
-
-		// Arrange
-		config := defaultClientConfig()
-		delay := -1
-
-		// Act
-		WithDelay(delay).apply(config)
-
-		// Assert
-		assert.Equal(t, 0, config.delay)
+		assert.Equal(t, subscriptionKey, config.subscriptionKey)
 	})
 }
