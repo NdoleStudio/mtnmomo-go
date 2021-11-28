@@ -48,7 +48,7 @@ import (
 
 func main()  {
 	client := mtnmomo.New(
-      mtnmomo.WithBaseURL("https://sandbox.momodeveloper.mtn.com/v1_0" /* It can also be a production url */),
+      mtnmomo.WithBaseURL("https://sandbox.momodeveloper.mtn.com/v1_0"),
       mtnmomo.WithSubscriptionKey(""/* Subscription key */),
     )
 }
@@ -72,7 +72,11 @@ if err != nil {
 Used to create an API user in the sandbox target environment.
 
 ```go
-userID, response, err := client.APIUser.CreateAPIUser(context.Background(), uuid.NewString(), "providerCallbackHost")
+userID, response, err := client.APIUser.CreateAPIUser(
+	context.Background(),
+	uuid.NewString(),
+	"providerCallbackHost",
+)
 
 if err != nil {
     log.Fatal(err)
