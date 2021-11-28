@@ -65,6 +65,39 @@ func (service *collectionService) RequestToPay(
 	return response, err
 }
 
+// GetRequestToPayStatus is used to get the status of a request to pay.
+//
+// API Docs: https://momodeveloper.mtn.com/docs/services/collection/operations/requesttopay-referenceId-GET
+func (service *collectionService) GetRequestToPayStatus(
+	ctx context.Context,
+	referenceID string,
+) (*RequestToPayStatus, *Response, error) {
+	err := service.refreshToken(ctx)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	request, err := service.client.newRequest(ctx, http.MethodGet, "/collection/v1_0/requesttopay/"+referenceID, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	service.client.addTargetEnvironment(request)
+	service.client.addCollectionAccessToken(request)
+
+	response, err := service.client.do(request)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	status := new(RequestToPayStatus)
+	if err = json.Unmarshal(*response.Body, status); err != nil {
+		return nil, response, err
+	}
+
+	return status, response, err
+}
+
 func (service *collectionService) tokenIsValid() bool {
 	return time.Now().UTC().Unix() < service.client.collectionAccessTokenExpiresAt
 }

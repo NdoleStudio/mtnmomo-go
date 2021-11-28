@@ -70,7 +70,7 @@ func TestCollectionService_RequestToPay(t *testing.T) {
 			Amount:     "10",
 			Currency:   "EUR",
 			ExternalID: uuid.NewString(),
-			Payer: &RequestToPayParamsPayer{
+			Payer: &RequestToPayPayer{
 				PartyIDType: "MSISDN",
 				PartyID:     "46733123453",
 			},
@@ -89,6 +89,52 @@ func TestCollectionService_RequestToPay(t *testing.T) {
 	assert.True(t, strings.HasPrefix(request.Header.Get("Authorization"), "Bearer"))
 	assert.Equal(t, testSubscriptionKey, request.Header.Get(headerKeySubscriptionKey))
 	assert.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+
+	// Teardown
+	server.Close()
+}
+
+func TestCollectionService_GetRequestToPayStatus(t *testing.T) {
+	// Setup
+	t.Parallel()
+
+	// Arrange
+	requests := make([]*http.Request, 0)
+	responses := [][]byte{stubs.CollectionToken(), stubs.CollectionRequestToPayStatus()}
+	server := helpers.MakeRequestCapturingTestServer(http.StatusOK, responses, &requests)
+	client := New(
+		WithBaseURL(server.URL),
+		WithSubscriptionKey(testSubscriptionKey),
+		WithAPIUser(testAPIUser),
+		WithAPIKey(testAPIKey),
+	)
+	referenceID := uuid.NewString()
+
+	// Act
+	status, response, err := client.Collection.GetRequestToPayStatus(context.Background(), referenceID)
+
+	// Assert
+	assert.Nil(t, err)
+
+	assert.GreaterOrEqual(t, len(requests), 1)
+	request := requests[len(requests)-1]
+	assert.Equal(t, "/collection/v1_0/requesttopay/"+referenceID, request.URL.Path)
+	assert.True(t, strings.HasPrefix(request.Header.Get("Authorization"), "Bearer"))
+	assert.Equal(t, testSubscriptionKey, request.Header.Get(headerKeySubscriptionKey))
+	assert.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+
+	financialTransactionID := "23503452"
+	assert.Equal(t, &RequestToPayStatus{
+		Amount:                 "100",
+		Currency:               "UGX",
+		FinancialTransactionID: &financialTransactionID,
+		ExternalID:             "947354",
+		Payer: &RequestToPayPayer{
+			PartyIDType: "MSISDN",
+			PartyID:     "4656473839",
+		},
+		Status: "SUCCESSFUL",
+	}, status)
 
 	// Teardown
 	server.Close()
