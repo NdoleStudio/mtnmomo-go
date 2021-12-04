@@ -95,6 +95,7 @@ func (service *collectionService) GetRequestToPayStatus(
 		return nil, response, err
 	}
 
+	status.ReferenceID = referenceID
 	return status, response, err
 }
 

@@ -15,10 +15,31 @@ type RequestToPayStatus struct {
 	Amount                 string             `json:"amount"`
 	Currency               string             `json:"currency"`
 	ExternalID             string             `json:"externalId"`
+	ReferenceID            string             `json:"referenceId"`
 	Payer                  *RequestToPayPayer `json:"payer"`
 	Status                 string             `json:"status"`
 	FinancialTransactionID *string            `json:"financialTransactionId,omitempty"`
 	Reason                 *string            `json:"reason,omitempty"`
+}
+
+// IsPending checks if a transaction is in pending status
+func (status *RequestToPayStatus) IsPending() bool {
+	return status.Status == "PENDING"
+}
+
+// IsFailed checks if a transaction is in failed status
+func (status *RequestToPayStatus) IsFailed() bool {
+	return status.Status == "FAILED"
+}
+
+// IsCancelled checks if a transaction is cancelled
+func (status *RequestToPayStatus) IsCancelled() bool {
+	return status.Status == "CANCELLED"
+}
+
+// IsSuccessful checks if a transaction is successful
+func (status *RequestToPayStatus) IsSuccessful() bool {
+	return status.Status == "SUCCESSFUL"
 }
 
 // RequestToPayPayer identifies an account holder in the wallet platform.
