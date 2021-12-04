@@ -129,6 +129,7 @@ func TestCollectionService_GetRequestToPayStatus(t *testing.T) {
 		Currency:               "UGX",
 		FinancialTransactionID: &financialTransactionID,
 		ExternalID:             "947354",
+		ReferenceID:            referenceID,
 		Payer: &RequestToPayPayer{
 			PartyIDType: "MSISDN",
 			PartyID:     "4656473839",
