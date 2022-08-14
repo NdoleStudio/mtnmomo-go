@@ -121,7 +121,7 @@ func TestCollectionService_GetRequestToPayStatus(t *testing.T) {
 	assert.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 
 	financialTransactionID := "23503452"
-	assert.Equal(t, &RequestToPayStatus{
+	assert.Equal(t, &CollectionTransactionStatus{
 		Amount:                 "100",
 		Currency:               "UGX",
 		FinancialTransactionID: &financialTransactionID,

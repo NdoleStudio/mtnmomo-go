@@ -10,8 +10,8 @@ type RequestToPayParams struct {
 	PayeeNote    string         `json:"payeeNote"`
 }
 
-// RequestToPayStatus is the status of a request to pay request.
-type RequestToPayStatus struct {
+// CollectionTransactionStatus is the status of a request to pay request.
+type CollectionTransactionStatus struct {
 	Amount                 string         `json:"amount"`
 	Currency               string         `json:"currency"`
 	ExternalID             string         `json:"externalId"`
@@ -23,22 +23,22 @@ type RequestToPayStatus struct {
 }
 
 // IsPending checks if a transaction is in pending status
-func (status *RequestToPayStatus) IsPending() bool {
+func (status *CollectionTransactionStatus) IsPending() bool {
 	return status.Status == "PENDING"
 }
 
 // IsFailed checks if a transaction is in failed status
-func (status *RequestToPayStatus) IsFailed() bool {
+func (status *CollectionTransactionStatus) IsFailed() bool {
 	return status.Status == "FAILED"
 }
 
 // IsCancelled checks if a transaction is cancelled
-func (status *RequestToPayStatus) IsCancelled() bool {
+func (status *CollectionTransactionStatus) IsCancelled() bool {
 	return status.Status == "CANCELLED"
 }
 
 // IsSuccessful checks if a transaction is successful
-func (status *RequestToPayStatus) IsSuccessful() bool {
+func (status *CollectionTransactionStatus) IsSuccessful() bool {
 	return status.Status == "SUCCESSFUL"
 }
 

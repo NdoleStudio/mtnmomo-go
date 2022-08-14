@@ -71,7 +71,7 @@ func (service *collectionService) RequestToPay(
 func (service *collectionService) GetRequestToPayStatus(
 	ctx context.Context,
 	referenceID string,
-) (*RequestToPayStatus, *Response, error) {
+) (*CollectionTransactionStatus, *Response, error) {
 	err := service.refreshToken(ctx)
 	if err != nil {
 		return nil, nil, err
@@ -90,7 +90,7 @@ func (service *collectionService) GetRequestToPayStatus(
 		return nil, nil, err
 	}
 
-	status := new(RequestToPayStatus)
+	status := new(CollectionTransactionStatus)
 	if err = json.Unmarshal(*response.Body, status); err != nil {
 		return nil, response, err
 	}

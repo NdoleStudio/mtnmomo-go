@@ -71,7 +71,7 @@ func (service *disbursementsService) Transfer(
 func (service *disbursementsService) GetTransferStatus(
 	ctx context.Context,
 	referenceID string,
-) (*RequestToPayStatus, *Response, error) {
+) (*DisbursementTransactionStatus, *Response, error) {
 	err := service.refreshToken(ctx)
 	if err != nil {
 		return nil, nil, err
@@ -90,7 +90,7 @@ func (service *disbursementsService) GetTransferStatus(
 		return nil, nil, err
 	}
 
-	status := new(RequestToPayStatus)
+	status := new(DisbursementTransactionStatus)
 	if err = json.Unmarshal(*response.Body, status); err != nil {
 		return nil, response, err
 	}
