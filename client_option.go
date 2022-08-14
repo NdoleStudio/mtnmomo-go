@@ -42,13 +42,6 @@ func WithSubscriptionKey(subscriptionKey string) Option {
 	})
 }
 
-// WithAPIUser sets the delay in milliseconds before a response is gotten.
-func WithAPIUser(apiUser string) Option {
-	return clientOptionFunc(func(config *clientConfig) {
-		config.apiUser = apiUser
-	})
-}
-
 // WithTargetEnvironment sets the identifier of the EWP system where the transaction shall be processed.
 func WithTargetEnvironment(targetEnvironment string) Option {
 	return clientOptionFunc(func(config *clientConfig) {
@@ -56,9 +49,22 @@ func WithTargetEnvironment(targetEnvironment string) Option {
 	})
 }
 
-// WithAPIKey sets the delay in milliseconds before a response is gotten.
-func WithAPIKey(apiKey string) Option {
+// WithCollectionAccount sets the collection api account
+func WithCollectionAccount(apiUser string, apiKey string) Option {
 	return clientOptionFunc(func(config *clientConfig) {
-		config.apiKey = apiKey
+		config.collectionAccount = &apiAccount{
+			apiUser: apiUser,
+			apiKey:  apiKey,
+		}
+	})
+}
+
+// WithDisbursementAccount sets the disbursement api account
+func WithDisbursementAccount(apiUser string, apiKey string) Option {
+	return clientOptionFunc(func(config *clientConfig) {
+		config.disbursementAccount = &apiAccount{
+			apiUser: apiUser,
+			apiKey:  apiKey,
+		}
 	})
 }

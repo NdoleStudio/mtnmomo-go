@@ -24,20 +24,25 @@ type service struct {
 // Client is the campay API client.
 // Do not instantiate this client with Client{}. Use the New method instead.
 type Client struct {
-	httpClient        *http.Client
-	common            service
-	baseURL           string
-	subscriptionKey   string
-	apiUser           string
-	apiKey            string
-	targetEnvironment string
+	httpClient          *http.Client
+	common              service
+	baseURL             string
+	subscriptionKey     string
+	collectionAccount   *apiAccount
+	disbursementAccount *apiAccount
+	targetEnvironment   string
 
 	collectionLock                 sync.Mutex
 	collectionAccessToken          string
 	collectionAccessTokenExpiresAt int64
 
-	APIUser    *apiUserService
-	Collection *collectionService
+	disbursementLock                 sync.Mutex
+	disbursementAccessToken          string
+	disbursementAccessTokenExpiresAt int64
+
+	APIUser      *apiUserService
+	Collection   *collectionService
+	Disbursement *disbursementsService
 }
 
 // New creates and returns a new campay.Client from a slice of campay.ClientOption.
@@ -49,18 +54,20 @@ func New(options ...Option) *Client {
 	}
 
 	client := &Client{
-		httpClient:        config.httpClient,
-		subscriptionKey:   config.subscriptionKey,
-		baseURL:           config.baseURL,
-		apiKey:            config.apiKey,
-		apiUser:           config.apiUser,
-		targetEnvironment: config.targetEnvironment,
-		collectionLock:    sync.Mutex{},
+		httpClient:          config.httpClient,
+		subscriptionKey:     config.subscriptionKey,
+		baseURL:             config.baseURL,
+		collectionAccount:   config.collectionAccount,
+		disbursementAccount: config.disbursementAccount,
+		targetEnvironment:   config.targetEnvironment,
+		collectionLock:      sync.Mutex{},
 	}
 
 	client.common.client = client
 	client.APIUser = (*apiUserService)(&client.common)
 	client.Collection = (*collectionService)(&client.common)
+	client.Disbursement = (*disbursementsService)(&client.common)
+
 	return client
 }
 
@@ -95,8 +102,12 @@ func (client *Client) addCollectionAccessToken(request *http.Request) {
 	request.Header.Add("Authorization", "Bearer "+client.collectionAccessToken)
 }
 
-func (client *Client) addBasicAuth(request *http.Request) {
-	request.SetBasicAuth(client.apiUser, client.apiKey)
+func (client *Client) addDisbursementAccessToken(request *http.Request) {
+	request.Header.Add("Authorization", "Bearer "+client.disbursementAccessToken)
+}
+
+func (client *Client) addBasicAuth(account *apiAccount, request *http.Request) {
+	request.SetBasicAuth(account.apiUser, account.apiKey)
 }
 
 func (client *Client) addReferenceID(request *http.Request, reference string) {

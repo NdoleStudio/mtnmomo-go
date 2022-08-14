@@ -43,7 +43,7 @@ func (service *apiUserService) CreateAPIKey(ctx context.Context, userID string) 
 	}
 
 	body := struct {
-		APIKey string `json:"apiKey"`
+		APIKey string `json:"ApiKey"`
 	}{}
 
 	if err = json.Unmarshal(*response.Body, &body); err != nil {

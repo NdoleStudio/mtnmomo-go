@@ -7,19 +7,19 @@ import (
 	"time"
 )
 
-// collectionService is the API client for the `/collection` endpoint
-type collectionService service
+// disbursementService is the API client for the `/disbursement` endpoint
+type disbursementsService service
 
 // Token is used to create an access token which can then be used to authorize and authenticate towards the other end-points of the API.
 //
-// API Docs: https://momodeveloper.mtn.com/docs/services/collection/operations/token-POST
-func (service *collectionService) Token(ctx context.Context) (*AuthToken, *Response, error) {
-	request, err := service.client.newRequest(ctx, http.MethodPost, "/collection/token/", nil)
+// API Docs: https://momodeveloper.mtn.com/docs/services/disbursement/operations/CreateAccessToken
+func (service *disbursementsService) Token(ctx context.Context) (*AuthToken, *Response, error) {
+	request, err := service.client.newRequest(ctx, http.MethodPost, "/disbursement/token/", nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	service.client.addBasicAuth(service.client.collectionAccount, request)
+	service.client.addBasicAuth(service.client.disbursementAccount, request)
 
 	response, err := service.client.do(request)
 	if err != nil {
@@ -34,13 +34,13 @@ func (service *collectionService) Token(ctx context.Context) (*AuthToken, *Respo
 	return authToken, response, err
 }
 
-// RequestToPay is used to request a payment from a consumer (Payer).
+// Transfer is used to transfer an amount from the own account to a payee account.
 //
-// API Docs: https://momodeveloper.mtn.com/docs/services/collection/operations/requesttopay-POST
-func (service *collectionService) RequestToPay(
+// API Docs: https://momodeveloper.mtn.com/docs/services/disbursement/operations/Transfer?
+func (service *disbursementsService) Transfer(
 	ctx context.Context,
 	referenceID string,
-	params *RequestToPayParams,
+	params *TransferParams,
 	callbackURL *string,
 ) (*Response, error) {
 	err := service.refreshToken(ctx)
@@ -48,7 +48,7 @@ func (service *collectionService) RequestToPay(
 		return nil, err
 	}
 
-	request, err := service.client.newRequest(ctx, http.MethodPost, "/collection/v1_0/requesttopay", params)
+	request, err := service.client.newRequest(ctx, http.MethodPost, "/disbursement/v1_0/transfer", params)
 	if err != nil {
 		return nil, err
 	}
@@ -59,16 +59,16 @@ func (service *collectionService) RequestToPay(
 
 	service.client.addTargetEnvironment(request)
 	service.client.addReferenceID(request, referenceID)
-	service.client.addCollectionAccessToken(request)
+	service.client.addDisbursementAccessToken(request)
 
 	response, err := service.client.do(request)
 	return response, err
 }
 
-// GetRequestToPayStatus is used to get the status of a request to pay.
+// GetTransferStatus is used to get the status of a transfer.
 //
-// API Docs: https://momodeveloper.mtn.com/docs/services/collection/operations/requesttopay-referenceId-GET
-func (service *collectionService) GetRequestToPayStatus(
+// API Docs: https://momodeveloper.mtn.com/docs/services/disbursement/operations/GetTransferStatus
+func (service *disbursementsService) GetTransferStatus(
 	ctx context.Context,
 	referenceID string,
 ) (*RequestToPayStatus, *Response, error) {
@@ -77,13 +77,13 @@ func (service *collectionService) GetRequestToPayStatus(
 		return nil, nil, err
 	}
 
-	request, err := service.client.newRequest(ctx, http.MethodGet, "/collection/v1_0/requesttopay/"+referenceID, nil)
+	request, err := service.client.newRequest(ctx, http.MethodGet, "/disbursement/v1_0/transfer/"+referenceID, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	service.client.addTargetEnvironment(request)
-	service.client.addCollectionAccessToken(request)
+	service.client.addDisbursementAccessToken(request)
 
 	response, err := service.client.do(request)
 	if err != nil {
@@ -101,19 +101,19 @@ func (service *collectionService) GetRequestToPayStatus(
 
 // GetAccountBalance returns the balance of the account.
 //
-// API Docs: https://momodeveloper.mtn.com/docs/services/collection/operations/get-v1_0-account-balance?
-func (service *collectionService) GetAccountBalance(ctx context.Context) (*AccountBalance, *Response, error) {
+// API Docs: https://momodeveloper.mtn.com/docs/services/disbursement/operations/GetAccountBalance
+func (service *disbursementsService) GetAccountBalance(ctx context.Context) (*AccountBalance, *Response, error) {
 	err := service.refreshToken(ctx)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	request, err := service.client.newRequest(ctx, http.MethodGet, "/collection/v1_0/account/balance", nil)
+	request, err := service.client.newRequest(ctx, http.MethodGet, "/disbursement/v1_0/account/balance", nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	service.client.addCollectionAccessToken(request)
+	service.client.addDisbursementAccessToken(request)
 	service.client.addTargetEnvironment(request)
 
 	response, err := service.client.do(request)
@@ -129,13 +129,13 @@ func (service *collectionService) GetAccountBalance(ctx context.Context) (*Accou
 	return balance, response, err
 }
 
-func (service *collectionService) tokenIsValid() bool {
-	return time.Now().UTC().Unix() < service.client.collectionAccessTokenExpiresAt
+func (service *disbursementsService) tokenIsValid() bool {
+	return time.Now().UTC().Unix() < service.client.disbursementAccessTokenExpiresAt
 }
 
-func (service *collectionService) refreshToken(ctx context.Context) error {
-	service.client.collectionLock.Lock()
-	defer service.client.collectionLock.Unlock()
+func (service *disbursementsService) refreshToken(ctx context.Context) error {
+	service.client.disbursementLock.Lock()
+	defer service.client.disbursementLock.Unlock()
 
 	if service.tokenIsValid() {
 		return nil
@@ -146,8 +146,8 @@ func (service *collectionService) refreshToken(ctx context.Context) error {
 		return err
 	}
 
-	service.client.collectionAccessToken = token.AccessToken
-	service.client.collectionAccessTokenExpiresAt = time.Now().UTC().Unix() + token.ExpiresIn - 100
+	service.client.disbursementAccessToken = token.AccessToken
+	service.client.disbursementAccessTokenExpiresAt = time.Now().UTC().Unix() + token.ExpiresIn - 100
 
 	return nil
 }

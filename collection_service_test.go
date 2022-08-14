@@ -23,8 +23,7 @@ func TestCollectionService_Token(t *testing.T) {
 	client := New(
 		WithBaseURL(server.URL),
 		WithSubscriptionKey(testSubscriptionKey),
-		WithAPIUser(testAPIUser),
-		WithAPIKey(testAPIKey),
+		WithCollectionAccount(testAPIUser, testAPIKey),
 	)
 
 	// Act
@@ -58,8 +57,7 @@ func TestCollectionService_RequestToPay(t *testing.T) {
 	client := New(
 		WithBaseURL(server.URL),
 		WithSubscriptionKey(testSubscriptionKey),
-		WithAPIUser(testAPIUser),
-		WithAPIKey(testAPIKey),
+		WithCollectionAccount(testAPIUser, testAPIKey),
 	)
 
 	// Act
@@ -70,7 +68,7 @@ func TestCollectionService_RequestToPay(t *testing.T) {
 			Amount:     "10",
 			Currency:   "EUR",
 			ExternalID: uuid.NewString(),
-			Payer: &RequestToPayPayer{
+			Payer: &AccountHolder{
 				PartyIDType: "MSISDN",
 				PartyID:     "46733123453",
 			},
@@ -105,8 +103,7 @@ func TestCollectionService_GetRequestToPayStatus(t *testing.T) {
 	client := New(
 		WithBaseURL(server.URL),
 		WithSubscriptionKey(testSubscriptionKey),
-		WithAPIUser(testAPIUser),
-		WithAPIKey(testAPIKey),
+		WithCollectionAccount(testAPIUser, testAPIKey),
 	)
 	referenceID := uuid.NewString()
 
@@ -130,7 +127,7 @@ func TestCollectionService_GetRequestToPayStatus(t *testing.T) {
 		FinancialTransactionID: &financialTransactionID,
 		ExternalID:             "947354",
 		ReferenceID:            referenceID,
-		Payer: &RequestToPayPayer{
+		Payer: &AccountHolder{
 			PartyIDType: "MSISDN",
 			PartyID:     "4656473839",
 		},
@@ -152,8 +149,7 @@ func TestCollectionService_GetAccountBalance(t *testing.T) {
 	client := New(
 		WithBaseURL(server.URL),
 		WithSubscriptionKey(testSubscriptionKey),
-		WithAPIUser(testAPIUser),
-		WithAPIKey(testAPIKey),
+		WithCollectionAccount(testAPIUser, testAPIKey),
 	)
 
 	// Act
