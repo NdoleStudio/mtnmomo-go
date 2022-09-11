@@ -34,7 +34,7 @@ func (service *disbursementsService) Token(ctx context.Context) (*AuthToken, *Re
 	return authToken, response, err
 }
 
-// Transfer is used to transfer an amount from the own account to a payee account.
+// Transfer is used to transfer an amount from the owner account to a payee account.
 //
 // API Docs: https://momodeveloper.mtn.com/docs/services/disbursement/operations/Transfer?
 func (service *disbursementsService) Transfer(
