@@ -39,7 +39,7 @@ import "github.com/NdoleStudio/mtnmomo-go"
   - `GET {baseURL}/collection/v1_0/account/balance`: Get the balance of the account
 - **Disbursements**
   - `POST {baseURL}/disbursement/token/`: Create access token
-  - `POST {baseURL}/disbursement/v1_0/transfer`: Transfer is used to transfer money from the owner account to a payee account.
+  - `POST {baseURL}/disbursement/v1_0/transfer`: Transfer money to a customer's account.
   - `GET {baseURL}/disbursement/v1_0/transfer/{referenceId}`: Get the status of a transfer.
   - `GET {baseURL}/disbursement/v1_0/account/balance`: Get the balance of the disbursement account
 
