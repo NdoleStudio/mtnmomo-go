@@ -23,7 +23,8 @@ func TestDisbursementsService_Token(t *testing.T) {
 	client := New(
 		WithBaseURL(server.URL),
 		WithSubscriptionKey(testSubscriptionKey),
-		WithDisbursementAccount(testAPIUser, testAPIKey),
+		WithAPIUser(testAPIUser),
+		WithAPIKey(testAPIKey),
 	)
 
 	// Act
@@ -57,7 +58,8 @@ func TestDisbursementsService_Transfer(t *testing.T) {
 	client := New(
 		WithBaseURL(server.URL),
 		WithSubscriptionKey(testSubscriptionKey),
-		WithDisbursementAccount(testAPIUser, testAPIKey),
+		WithAPIUser(testAPIUser),
+		WithAPIKey(testAPIKey),
 	)
 
 	// Act
@@ -103,7 +105,8 @@ func TestDisbursementsService_GetTransferStatus(t *testing.T) {
 	client := New(
 		WithBaseURL(server.URL),
 		WithSubscriptionKey(testSubscriptionKey),
-		WithDisbursementAccount(testAPIUser, testAPIKey),
+		WithAPIUser(testAPIUser),
+		WithAPIKey(testAPIKey),
 	)
 	referenceID := uuid.NewString()
 
@@ -149,7 +152,8 @@ func TestDisbursementsService_GetAccountBalance(t *testing.T) {
 	client := New(
 		WithBaseURL(server.URL),
 		WithSubscriptionKey(testSubscriptionKey),
-		WithDisbursementAccount(testAPIUser, testAPIKey),
+		WithAPIUser(testAPIUser),
+		WithAPIKey(testAPIKey),
 	)
 
 	// Act

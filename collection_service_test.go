@@ -23,7 +23,8 @@ func TestCollectionService_Token(t *testing.T) {
 	client := New(
 		WithBaseURL(server.URL),
 		WithSubscriptionKey(testSubscriptionKey),
-		WithCollectionAccount(testAPIUser, testAPIKey),
+		WithAPIUser(testAPIUser),
+		WithAPIKey(testAPIKey),
 	)
 
 	// Act
@@ -57,7 +58,8 @@ func TestCollectionService_RequestToPay(t *testing.T) {
 	client := New(
 		WithBaseURL(server.URL),
 		WithSubscriptionKey(testSubscriptionKey),
-		WithCollectionAccount(testAPIUser, testAPIKey),
+		WithAPIUser(testAPIUser),
+		WithAPIKey(testAPIKey),
 	)
 
 	// Act
@@ -103,7 +105,8 @@ func TestCollectionService_GetRequestToPayStatus(t *testing.T) {
 	client := New(
 		WithBaseURL(server.URL),
 		WithSubscriptionKey(testSubscriptionKey),
-		WithCollectionAccount(testAPIUser, testAPIKey),
+		WithAPIUser(testAPIUser),
+		WithAPIKey(testAPIKey),
 	)
 	referenceID := uuid.NewString()
 
@@ -149,7 +152,8 @@ func TestCollectionService_GetAccountBalance(t *testing.T) {
 	client := New(
 		WithBaseURL(server.URL),
 		WithSubscriptionKey(testSubscriptionKey),
-		WithCollectionAccount(testAPIUser, testAPIKey),
+		WithAPIUser(testAPIUser),
+		WithAPIKey(testAPIKey),
 	)
 
 	// Act

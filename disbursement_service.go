@@ -19,7 +19,7 @@ func (service *disbursementsService) Token(ctx context.Context) (*AuthToken, *Re
 		return nil, nil, err
 	}
 
-	service.client.addBasicAuth(service.client.disbursementAccount, request)
+	service.client.addBasicAuth(request)
 
 	response, err := service.client.do(request)
 	if err != nil {
@@ -59,7 +59,7 @@ func (service *disbursementsService) Transfer(
 
 	service.client.addTargetEnvironment(request)
 	service.client.addReferenceID(request, referenceID)
-	service.client.addDisbursementAccessToken(request)
+	service.client.addAccessToken(request)
 
 	response, err := service.client.do(request)
 	return response, err
@@ -83,7 +83,7 @@ func (service *disbursementsService) GetTransferStatus(
 	}
 
 	service.client.addTargetEnvironment(request)
-	service.client.addDisbursementAccessToken(request)
+	service.client.addAccessToken(request)
 
 	response, err := service.client.do(request)
 	if err != nil {
@@ -113,7 +113,7 @@ func (service *disbursementsService) GetAccountBalance(ctx context.Context) (*Ac
 		return nil, nil, err
 	}
 
-	service.client.addDisbursementAccessToken(request)
+	service.client.addAccessToken(request)
 	service.client.addTargetEnvironment(request)
 
 	response, err := service.client.do(request)
@@ -130,12 +130,12 @@ func (service *disbursementsService) GetAccountBalance(ctx context.Context) (*Ac
 }
 
 func (service *disbursementsService) tokenIsValid() bool {
-	return time.Now().UTC().Unix() < service.client.disbursementAccessTokenExpiresAt
+	return time.Now().UTC().Unix() < service.client.accessTokenExpiresAt
 }
 
 func (service *disbursementsService) refreshToken(ctx context.Context) error {
-	service.client.disbursementLock.Lock()
-	defer service.client.disbursementLock.Unlock()
+	service.client.accessTokenLock.Lock()
+	defer service.client.accessTokenLock.Unlock()
 
 	if service.tokenIsValid() {
 		return nil
@@ -146,8 +146,8 @@ func (service *disbursementsService) refreshToken(ctx context.Context) error {
 		return err
 	}
 
-	service.client.disbursementAccessToken = token.AccessToken
-	service.client.disbursementAccessTokenExpiresAt = time.Now().UTC().Unix() + token.ExpiresIn - 100
+	service.client.accessToken = token.AccessToken
+	service.client.accessTokenExpiresAt = time.Now().UTC().Unix() + token.ExpiresIn - 100
 
 	return nil
 }

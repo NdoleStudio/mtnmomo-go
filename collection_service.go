@@ -19,7 +19,7 @@ func (service *collectionService) Token(ctx context.Context) (*AuthToken, *Respo
 		return nil, nil, err
 	}
 
-	service.client.addBasicAuth(service.client.collectionAccount, request)
+	service.client.addBasicAuth(request)
 
 	response, err := service.client.do(request)
 	if err != nil {
@@ -59,7 +59,7 @@ func (service *collectionService) RequestToPay(
 
 	service.client.addTargetEnvironment(request)
 	service.client.addReferenceID(request, referenceID)
-	service.client.addCollectionAccessToken(request)
+	service.client.addAccessToken(request)
 
 	response, err := service.client.do(request)
 	return response, err
@@ -83,7 +83,7 @@ func (service *collectionService) GetRequestToPayStatus(
 	}
 
 	service.client.addTargetEnvironment(request)
-	service.client.addCollectionAccessToken(request)
+	service.client.addAccessToken(request)
 
 	response, err := service.client.do(request)
 	if err != nil {
@@ -113,7 +113,7 @@ func (service *collectionService) GetAccountBalance(ctx context.Context) (*Accou
 		return nil, nil, err
 	}
 
-	service.client.addCollectionAccessToken(request)
+	service.client.addAccessToken(request)
 	service.client.addTargetEnvironment(request)
 
 	response, err := service.client.do(request)
@@ -130,12 +130,12 @@ func (service *collectionService) GetAccountBalance(ctx context.Context) (*Accou
 }
 
 func (service *collectionService) tokenIsValid() bool {
-	return time.Now().UTC().Unix() < service.client.collectionAccessTokenExpiresAt
+	return time.Now().UTC().Unix() < service.client.accessTokenExpiresAt
 }
 
 func (service *collectionService) refreshToken(ctx context.Context) error {
-	service.client.collectionLock.Lock()
-	defer service.client.collectionLock.Unlock()
+	service.client.accessTokenLock.Lock()
+	defer service.client.accessTokenLock.Unlock()
 
 	if service.tokenIsValid() {
 		return nil
@@ -146,8 +146,8 @@ func (service *collectionService) refreshToken(ctx context.Context) error {
 		return err
 	}
 
-	service.client.collectionAccessToken = token.AccessToken
-	service.client.collectionAccessTokenExpiresAt = time.Now().UTC().Unix() + token.ExpiresIn - 100
+	service.client.accessToken = token.AccessToken
+	service.client.accessTokenExpiresAt = time.Now().UTC().Unix() + token.ExpiresIn - 100
 
 	return nil
 }

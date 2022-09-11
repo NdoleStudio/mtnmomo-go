@@ -49,22 +49,16 @@ func WithTargetEnvironment(targetEnvironment string) Option {
 	})
 }
 
-// WithCollectionAccount sets the collection api account
-func WithCollectionAccount(apiUser string, apiKey string) Option {
+// WithAPIUser sets the API user.
+func WithAPIUser(apiUser string) Option {
 	return clientOptionFunc(func(config *clientConfig) {
-		config.collectionAccount = &apiAccount{
-			apiUser: apiUser,
-			apiKey:  apiKey,
-		}
+		config.apiUser = apiUser
 	})
 }
 
-// WithDisbursementAccount sets the disbursement api account
-func WithDisbursementAccount(apiUser string, apiKey string) Option {
+// WithAPIKey sets the API key.
+func WithAPIKey(apiKey string) Option {
 	return clientOptionFunc(func(config *clientConfig) {
-		config.disbursementAccount = &apiAccount{
-			apiUser: apiUser,
-			apiKey:  apiKey,
-		}
+		config.apiKey = apiKey
 	})
 }

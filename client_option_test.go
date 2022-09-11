@@ -9,9 +9,9 @@ import (
 
 const (
 	testSubscriptionKey   = "subscriptionKey"
-	testAPIKey            = "collectionAPIKey"
+	testAPIKey            = "APIKey"
 	testTargetEnvironment = "targetEnvironment"
-	testAPIUser           = "collectionAPIUser"
+	testAPIUser           = "APIUser"
 )
 
 func TestWithHTTPClient(t *testing.T) {
@@ -94,8 +94,8 @@ func TestWithSubscriptionKey(t *testing.T) {
 	})
 }
 
-func TestWithCollectionAccount(t *testing.T) {
-	t.Run("collection account is set successfully", func(t *testing.T) {
+func TestWithAPIKey(t *testing.T) {
+	t.Run("apiKey is set successfully", func(t *testing.T) {
 		// Setup
 		t.Parallel()
 
@@ -103,18 +103,15 @@ func TestWithCollectionAccount(t *testing.T) {
 		config := defaultClientConfig()
 
 		// Act
-		WithCollectionAccount(testAPIUser, testAPIKey).apply(config)
+		WithAPIKey(testAPIKey).apply(config)
 
 		// Assert
-		assert.EqualValues(t, &apiAccount{
-			apiUser: testAPIUser,
-			apiKey:  testAPIKey,
-		}, config.collectionAccount)
+		assert.Equal(t, testAPIKey, config.apiKey)
 	})
 }
 
-func TestWithDisbursementAccount(t *testing.T) {
-	t.Run("disbursement account is set successfully", func(t *testing.T) {
+func TestWithAPIUser(t *testing.T) {
+	t.Run("apiUser is set successfully", func(t *testing.T) {
 		// Setup
 		t.Parallel()
 
@@ -122,13 +119,10 @@ func TestWithDisbursementAccount(t *testing.T) {
 		config := defaultClientConfig()
 
 		// Act
-		WithDisbursementAccount(testAPIUser, testAPIKey).apply(config)
+		WithAPIUser(testAPIUser).apply(config)
 
 		// Assert
-		assert.EqualValues(t, &apiAccount{
-			apiUser: testAPIUser,
-			apiKey:  testAPIKey,
-		}, config.disbursementAccount)
+		assert.Equal(t, testAPIUser, config.apiUser)
 	})
 }
 

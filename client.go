@@ -24,21 +24,17 @@ type service struct {
 // Client is the campay API client.
 // Do not instantiate this client with Client{}. Use the New method instead.
 type Client struct {
-	httpClient          *http.Client
-	common              service
-	baseURL             string
-	subscriptionKey     string
-	collectionAccount   *apiAccount
-	disbursementAccount *apiAccount
-	targetEnvironment   string
+	httpClient        *http.Client
+	common            service
+	baseURL           string
+	subscriptionKey   string
+	apiKey            string
+	apiUser           string
+	targetEnvironment string
 
-	collectionLock                 sync.Mutex
-	collectionAccessToken          string
-	collectionAccessTokenExpiresAt int64
-
-	disbursementLock                 sync.Mutex
-	disbursementAccessToken          string
-	disbursementAccessTokenExpiresAt int64
+	accessTokenLock      sync.Mutex
+	accessToken          string
+	accessTokenExpiresAt int64
 
 	APIUser      *apiUserService
 	Collection   *collectionService
@@ -54,13 +50,12 @@ func New(options ...Option) *Client {
 	}
 
 	client := &Client{
-		httpClient:          config.httpClient,
-		subscriptionKey:     config.subscriptionKey,
-		baseURL:             config.baseURL,
-		collectionAccount:   config.collectionAccount,
-		disbursementAccount: config.disbursementAccount,
-		targetEnvironment:   config.targetEnvironment,
-		collectionLock:      sync.Mutex{},
+		httpClient:        config.httpClient,
+		subscriptionKey:   config.subscriptionKey,
+		baseURL:           config.baseURL,
+		apiKey:            config.apiKey,
+		apiUser:           config.apiUser,
+		targetEnvironment: config.targetEnvironment,
 	}
 
 	client.common.client = client
@@ -98,16 +93,12 @@ func (client *Client) newRequest(ctx context.Context, method, uri string, body i
 	return req, nil
 }
 
-func (client *Client) addCollectionAccessToken(request *http.Request) {
-	request.Header.Add("Authorization", "Bearer "+client.collectionAccessToken)
+func (client *Client) addAccessToken(request *http.Request) {
+	request.Header.Add("Authorization", "Bearer "+client.accessToken)
 }
 
-func (client *Client) addDisbursementAccessToken(request *http.Request) {
-	request.Header.Add("Authorization", "Bearer "+client.disbursementAccessToken)
-}
-
-func (client *Client) addBasicAuth(account *apiAccount, request *http.Request) {
-	request.SetBasicAuth(account.apiUser, account.apiKey)
+func (client *Client) addBasicAuth(request *http.Request) {
+	request.SetBasicAuth(client.apiUser, client.apiKey)
 }
 
 func (client *Client) addReferenceID(request *http.Request, reference string) {
