@@ -23,7 +23,7 @@ func (service *disbursementsService) Token(ctx context.Context) (*AuthToken, *Re
 
 	response, err := service.client.do(request)
 	if err != nil {
-		return nil, nil, err
+		return nil, response, err
 	}
 
 	authToken := new(AuthToken)
@@ -87,7 +87,7 @@ func (service *disbursementsService) GetTransferStatus(
 
 	response, err := service.client.do(request)
 	if err != nil {
-		return nil, nil, err
+		return nil, response, err
 	}
 
 	status := new(DisbursementTransactionStatus)
@@ -118,7 +118,7 @@ func (service *disbursementsService) GetAccountBalance(ctx context.Context) (*Ac
 
 	response, err := service.client.do(request)
 	if err != nil {
-		return nil, nil, err
+		return nil, response, err
 	}
 
 	balance := new(AccountBalance)

@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"sync"
 )
@@ -127,7 +126,7 @@ func (client *Client) do(req *http.Request) (*Response, error) {
 		return resp, err
 	}
 
-	_, err = io.Copy(ioutil.Discard, httpResponse.Body)
+	_, err = io.Copy(io.Discard, httpResponse.Body)
 	if err != nil {
 		return resp, err
 	}
@@ -140,7 +139,7 @@ func (client *Client) newResponse(httpResponse *http.Response) (*Response, error
 	response := new(Response)
 	response.HTTPResponse = httpResponse
 
-	buf, err := ioutil.ReadAll(response.HTTPResponse.Body)
+	buf, err := io.ReadAll(response.HTTPResponse.Body)
 	if err != nil {
 		return nil, err
 	}

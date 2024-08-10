@@ -23,7 +23,7 @@ func (service *collectionService) Token(ctx context.Context) (*AuthToken, *Respo
 
 	response, err := service.client.do(request)
 	if err != nil {
-		return nil, nil, err
+		return nil, response, err
 	}
 
 	authToken := new(AuthToken)
@@ -87,7 +87,7 @@ func (service *collectionService) GetRequestToPayStatus(
 
 	response, err := service.client.do(request)
 	if err != nil {
-		return nil, nil, err
+		return nil, response, err
 	}
 
 	status := new(CollectionTransactionStatus)
@@ -118,7 +118,7 @@ func (service *collectionService) GetAccountBalance(ctx context.Context) (*Accou
 
 	response, err := service.client.do(request)
 	if err != nil {
-		return nil, nil, err
+		return nil, response, err
 	}
 
 	balance := new(AccountBalance)
