@@ -37,3 +37,23 @@ func CollectionAccountBalance() []byte {
 		}
 `)
 }
+
+// CollectionValidateAccountHolderStatus is a dummy json response for the `/collection/v1_0/accountholder/{accountHolderIdType}/{accountHolderId}/active` endpoint
+func CollectionValidateAccountHolderStatus() []byte {
+	return []byte(`
+		{
+			"result": true
+		}
+`)
+}
+
+// CollectionGetBasicUserinfo is a dummy json response for the `/collection/v1_0/accountholder/{accountHolderIdType}/{accountHolderId}/basicuserinfo` endpoint
+func CollectionGetBasicUserinfo() []byte {
+	return []byte(`
+		{
+			"family_name": "JOHN",
+			"given_name": "DOE",
+			"sub": "1111111"
+		}
+`)
+}

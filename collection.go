@@ -1,5 +1,34 @@
 package mtnmomo
 
+import "strings"
+
+type AccountHolderIDType string
+
+const (
+	// AccountHolderIDTypeMSISDN is the account holder ID type for a mobile number
+	AccountHolderIDTypeMSISDN AccountHolderIDType = "msisdn"
+
+	// AccountHolderIDTypeEMAIL is the account holder ID type for an email address
+	AccountHolderIDTypeEMAIL AccountHolderIDType = "email"
+)
+
+// AccountHolderStatus is the status of an account holder
+type AccountHolderStatus struct {
+	IsActive bool `json:"result"`
+}
+
+// BasicUserInfo contains personal information of an account holder
+type BasicUserInfo struct {
+	GivenName  string `json:"given_name"`
+	FamilyName string `json:"family_name"`
+	Sub        string `json:"sub"`
+}
+
+// FullName returns the full name of the account holder
+func (info *BasicUserInfo) FullName() string {
+	return strings.TrimSpace(info.FamilyName + " " + info.GivenName)
+}
+
 // RequestToPayParams is the set of parameters used when creating a payment request
 type RequestToPayParams struct {
 	Amount       string         `json:"amount"`

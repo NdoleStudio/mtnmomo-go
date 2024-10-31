@@ -174,3 +174,107 @@ func TestCollectionService_GetAccountBalance(t *testing.T) {
 	// Teardown
 	server.Close()
 }
+
+func TestCollectionService_ValidateAccountHolderStatus(t *testing.T) {
+	// Setup
+	t.Parallel()
+
+	// Arrange
+	requests := make([]*http.Request, 0)
+	responses := [][]byte{stubs.CollectionToken(), stubs.CollectionValidateAccountHolderStatus()}
+	server := helpers.MakeRequestCapturingTestServer(http.StatusOK, responses, &requests)
+	client := New(
+		WithBaseURL(server.URL),
+		WithSubscriptionKey(testSubscriptionKey),
+		WithAPIUser(testAPIUser),
+		WithAPIKey(testAPIKey),
+	)
+
+	// Act
+	status, response, err := client.Collection.ValidateAccountHolderStatus(context.Background(), AccountHolderIDTypeMSISDN, "23777777777")
+
+	// Assert
+	assert.Nil(t, err)
+
+	assert.GreaterOrEqual(t, len(requests), 1)
+	request := requests[len(requests)-1]
+	assert.Equal(t, "/collection/v1_0/accountholder/msisdn/23777777777/active", request.URL.Path)
+	assert.True(t, strings.HasPrefix(request.Header.Get("Authorization"), "Bearer"))
+	assert.Equal(t, testSubscriptionKey, request.Header.Get(headerKeySubscriptionKey))
+	assert.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+
+	assert.True(t, status.IsActive)
+
+	// Teardown
+	server.Close()
+}
+
+func TestCollectionService_ValidateAccountHolderStatusWithInternalServerError(t *testing.T) {
+	// Setup
+	t.Parallel()
+
+	// Arrange
+	server := helpers.MakeTestServer(http.StatusInternalServerError, nil)
+	client := New(WithBaseURL(server.URL))
+
+	// Act
+	_, _, err := client.Collection.ValidateAccountHolderStatus(context.Background(), AccountHolderIDTypeMSISDN, "23777777777")
+
+	// Assert
+	assert.NotNil(t, err)
+
+	// Teardown
+	server.Close()
+}
+
+func TestCollectionService_GetBasicUserinfo(t *testing.T) {
+	// Setup
+	t.Parallel()
+
+	// Arrange
+	requests := make([]*http.Request, 0)
+	responses := [][]byte{stubs.CollectionToken(), stubs.CollectionGetBasicUserinfo()}
+	server := helpers.MakeRequestCapturingTestServer(http.StatusOK, responses, &requests)
+	client := New(
+		WithBaseURL(server.URL),
+		WithSubscriptionKey(testSubscriptionKey),
+		WithAPIUser(testAPIUser),
+		WithAPIKey(testAPIKey),
+	)
+
+	// Act
+	userInfo, response, err := client.Collection.GetBasicUserinfo(context.Background(), AccountHolderIDTypeMSISDN, "23777777777")
+
+	// Assert
+	assert.Nil(t, err)
+
+	assert.GreaterOrEqual(t, len(requests), 1)
+	request := requests[len(requests)-1]
+	assert.Equal(t, "/collection/v1_0/accountholder/msisdn/23777777777/basicuserinfo", request.URL.Path)
+	assert.True(t, strings.HasPrefix(request.Header.Get("Authorization"), "Bearer"))
+	assert.Equal(t, testSubscriptionKey, request.Header.Get(headerKeySubscriptionKey))
+	assert.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+
+	assert.Equal(t, "JOHN DOE", userInfo.FullName())
+
+	// Teardown
+	server.Close()
+}
+
+func TestCollectionService_GetBasicUserinfoWithInternalServerError(t *testing.T) {
+	// Setup
+	t.Parallel()
+
+	// Arrange
+	server := helpers.MakeTestServer(http.StatusInternalServerError, nil)
+	client := New(WithBaseURL(server.URL))
+
+	// Act
+	_, _, err := client.Collection.GetBasicUserinfo(context.Background(), AccountHolderIDTypeMSISDN, "23777777777")
+
+	// Assert
+	assert.NotNil(t, err)
+
+	// Teardown
+	server.Close()
+}

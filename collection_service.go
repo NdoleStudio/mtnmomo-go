@@ -3,6 +3,7 @@ package mtnmomo
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 )
@@ -127,6 +128,68 @@ func (service *collectionService) GetAccountBalance(ctx context.Context) (*Accou
 	}
 
 	return balance, response, err
+}
+
+// ValidateAccountHolderStatus is used to check if an account holder is registered and active in the system.
+//
+// API Docs: https://momodeveloper.mtn.com/api-details#api=collection&operation=ValidateAccountHolderStatus
+func (service *collectionService) ValidateAccountHolderStatus(ctx context.Context, IDType AccountHolderIDType, ID string) (*AccountHolderStatus, *Response, error) {
+	err := service.refreshToken(ctx)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	uri := fmt.Sprintf("/collection/v1_0/accountholder/%s/%s/active", IDType, ID)
+	request, err := service.client.newRequest(ctx, http.MethodGet, uri, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	service.client.addAccessToken(request)
+	service.client.addTargetEnvironment(request)
+
+	response, err := service.client.do(request)
+	if err != nil {
+		return nil, response, err
+	}
+
+	status := new(AccountHolderStatus)
+	if err = json.Unmarshal(*response.Body, status); err != nil {
+		return nil, response, err
+	}
+
+	return status, response, err
+}
+
+// GetBasicUserinfo returns personal information of the account holder.
+//
+// API Docs: https://momodeveloper.mtn.com/api-details#api=collection&operation=GetBasicUserinfo
+func (service *collectionService) GetBasicUserinfo(ctx context.Context, IDType AccountHolderIDType, ID string) (*BasicUserInfo, *Response, error) {
+	err := service.refreshToken(ctx)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	uri := fmt.Sprintf("/collection/v1_0/accountholder/%s/%s/basicuserinfo", IDType, ID)
+	request, err := service.client.newRequest(ctx, http.MethodGet, uri, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	service.client.addAccessToken(request)
+	service.client.addTargetEnvironment(request)
+
+	response, err := service.client.do(request)
+	if err != nil {
+		return nil, response, err
+	}
+
+	status := new(BasicUserInfo)
+	if err = json.Unmarshal(*response.Body, status); err != nil {
+		return nil, response, err
+	}
+
+	return status, response, err
 }
 
 func (service *collectionService) tokenIsValid() bool {
